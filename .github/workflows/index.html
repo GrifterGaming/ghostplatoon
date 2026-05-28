@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ghost Platoon - 2/75th Ranger Regiment</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Share+Tech+Mono&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --gold:#C9A84C;--red:#8B1A1A;--dark:#0D0D0D;--mid:#1A1A1A;--surface:#222;--text:#E8E6E0;--muted:#8A8880;--border:#333;
+  }
+  body{background:var(--dark);color:var(--text);font-family:'Source Serif 4',serif;min-height:100vh;overflow-x:hidden}
+
+  nav{background:rgba(13,13,13,0.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;gap:0;height:56px}
+  .nav-logo{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.1rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-right:auto;display:flex;align-items:center;gap:10px}
+  .nav-logo span{color:var(--muted);font-weight:400;font-size:.85rem;letter-spacing:.06em}
+  .nav-tabs{display:flex;height:56px}
+  .nav-tab{font-family:'Oswald',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;padding:0 1.2rem;cursor:pointer;transition:all .2s;height:100%}
+  .nav-tab:hover{color:var(--text)}
+  .nav-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+  .page{display:none;animation:fadeIn .3s ease}
+  .page.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  .hero{background:linear-gradient(to bottom, #0D0D0D 0%, #141008 60%, #0D0D0D 100%);position:relative;overflow:hidden;padding:5rem 2rem 4rem}
+  .hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(201,168,76,.04) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(201,168,76,.04) 40px);pointer-events:none}
+  .hero-inner{max-width:900px;margin:0 auto;text-align:center;position:relative}
+  .hero-badge{display:inline-block;font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:.35rem 1rem;margin-bottom:1.8rem}
+  .hero h1{font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:.06em;text-transform:uppercase;line-height:1;margin-bottom:.5rem;color:#fff}
+  .hero h1 em{color:var(--gold);font-style:normal}
+  .hero-sub{font-family:'Oswald',sans-serif;font-weight:400;font-size:1rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem}
+  .hero-divider{width:60px;height:2px;background:var(--red);margin:0 auto 2rem}
+  .hero p{font-size:1rem;line-height:1.75;color:#A8A49C;max-width:580px;margin:0 auto 2.5rem}
+  .hero-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);max-width:700px;margin:0 auto;border:1px solid var(--border)}
+  .hero-card{background:var(--mid);padding:1.4rem 1rem;text-align:center;cursor:pointer;transition:background .2s}
+  .hero-card:hover{background:#282828}
+  .hero-card-icon{font-size:1.5rem;margin-bottom:.6rem;color:var(--gold)}
+  .hero-card-label{font-family:'Oswald',sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem}
+  .hero-card-title{font-family:'Oswald',sans-serif;font-size:.95rem;font-weight:500;color:var(--text)}
+
+  .content{max-width:900px;margin:0 auto;padding:3rem 2rem}
+  .section-header{margin-bottom:2.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .section-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;display:block}
+  .section-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:2rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text)}
+  .section-desc{margin-top:.6rem;color:var(--muted);font-size:.95rem;line-height:1.7}
+
+  .card{background:var(--surface);border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem;position:relative;transition:border-color .2s}
+  .card:hover{border-color:#555}
+  .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
+  .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem}
+  .card-title{font-family:'Oswald',sans-serif;font-weight:500;font-size:1.1rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+  .card-badge{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);padding:.25rem .6rem}
+  .card p{font-size:.9rem;line-height:1.7;color:#A8A49C}
+  .card ul{list-style:none;margin-top:.75rem}
+  .card ul li{font-family:'Share Tech Mono',monospace;font-size:.8rem;color:#A8A49C;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:.6rem}
+  .card ul li::before{content:'▸';color:var(--red);font-size:.65rem;flex-shrink:0}
+  .card ul li:last-child{border-bottom:none}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+  .kb-table{width:100%;border-collapse:collapse;margin-top:.5rem}
+  .kb-table th{font-family:'Oswald',sans-serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+  .kb-table td{font-size:.85rem;padding:.6rem .8rem;border-bottom:1px solid rgba(255,255,255,.04);color:#A8A49C;vertical-align:top}
+  .kb-table tr:last-child td{border-bottom:none}
+  .kb-table td:first-child{font-family:'Oswald',sans-serif;font-size:.85rem;color:var(--text);letter-spacing:.04em;width:35%}
+  kbd{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:.75rem;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.1rem .45rem;margin:.05rem}
+
+  .drill{background:var(--mid);border:1px solid var(--border);margin-bottom:1.2rem;overflow:hidden;transition:all .2s}
+  .drill-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;cursor:pointer;user-select:none}
+  .drill-num{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--gold);background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);padding:.3rem .6rem;flex-shrink:0;min-width:48px;text-align:center}
+  .drill-name{font-family:'Oswald',sans-serif;font-weight:500;font-size:1rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text);flex:1}
+  .drill-toggle{font-size:.75rem;color:var(--muted);transition:transform .2s;flex-shrink:0}
+  .drill.open .drill-toggle{transform:rotate(180deg)}
+  .drill-body{display:none;padding:0 1.2rem 1.2rem;border-top:1px solid var(--border)}
+  .drill.open .drill-body{display:block}
+  .drill-meta{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem;margin-bottom:.75rem}
+  .drill-meta-box{background:rgba(255,255,255,.03);border:1px solid var(--border);padding:.75rem}
+  .drill-meta-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;display:block}
+  .drill-meta-text{font-size:.85rem;line-height:1.65;color:#A8A49C}
+  .drill-steps{list-style:none;margin-top:.5rem}
+  .drill-steps li{font-size:.88rem;line-height:1.6;color:#A8A49C;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;gap:.75rem}
+  .drill-steps li:last-child{border-bottom:none}
+  .step-num{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--gold);flex-shrink:0;margin-top:.15rem}
+
+  .aar-phase{background:var(--mid);border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem;position:relative;overflow:hidden}
+  .aar-phase::after{content:attr(data-num);position:absolute;right:-10px;top:-15px;font-family:'Oswald',sans-serif;font-weight:700;font-size:5rem;color:rgba(201,168,76,.05);line-height:1;pointer-events:none}
+  .aar-phase-num{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.4rem;display:block}
+  .aar-phase-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-bottom:.8rem}
+  .aar-phase p{font-size:.9rem;line-height:1.75;color:#A8A49C}
+  .aar-phase p+p{margin-top:.75rem}
+  .aar-advantages{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .aar-advantages-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;display:block}
+  .aar-adv-list{list-style:none}
+  .aar-adv-list li{font-size:.88rem;line-height:1.6;color:#A8A49C;padding:.3rem 0;display:flex;gap:.7rem}
+  .aar-adv-list li::before{content:'✓';color:var(--gold);font-size:.75rem;margin-top:.2rem;flex-shrink:0}
+
+  .formation-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}
+  .formation-card{background:var(--mid);border:1px solid var(--border);padding:1.1rem;transition:border-color .2s}
+  .formation-card:hover{border-color:var(--gold)}
+  .formation-name{font-family:'Oswald',sans-serif;font-weight:500;font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-bottom:.6rem}
+  .formation-row{display:flex;align-items:baseline;gap:.4rem;margin-bottom:.3rem}
+  .formation-row-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;width:30px;flex-shrink:0}
+  .pro-label{color:#6B9B6B}
+  .con-label{color:#9B6B6B}
+  .use-label{color:var(--gold)}
+  .formation-row-text{font-size:.82rem;color:#A8A49C;line-height:1.5}
+
+  .kit-section{margin-bottom:1.5rem}
+  .kit-section-title{font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);padding:.45rem 1rem;margin-bottom:.1rem;display:flex;align-items:center;gap:.5rem}
+  .kit-items{background:var(--mid);border:1px solid var(--border);border-top:none;padding:.75rem 1rem}
+  .kit-items-grid{display:grid;grid-template-columns:1fr 1fr;gap:.1rem}
+  .kit-item{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#A8A49C;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:.5rem}
+  .kit-item:last-child{border-bottom:none}
+  .kit-item::before{content:'▸';color:var(--red);font-size:.6rem}
+
+  .weapons-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1rem}
+  .weapon-group{background:var(--mid);border:1px solid var(--border);padding:1.1rem}
+  .weapon-group-title{font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--border);padding-bottom:.6rem;margin-bottom:.7rem}
+  .weapon-item{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#A8A49C;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:.5rem}
+  .weapon-item:last-child{border-bottom:none}
+  .weapon-item::before{content:'▸';color:var(--red);font-size:.6rem}
+
+  footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;background:var(--mid)}
+  footer p{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Ghost Plt <span>2/75th Rangers</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('home')">Home</button>
+      <button class="nav-tab" onclick="showPage('ngt')">NGT</button>
+      <button class="nav-tab" onclick="showPage('drills')">Battle Drills</button>
+      <button class="nav-tab" onclick="showPage('aar')">AARs</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">Rangers Lead The Way, All The Way</div>
+      <h1>Ghost<br><em>Platoon</em></h1>
+      <div class="hero-sub">2nd Battalion · 75th Ranger Regiment</div>
+      <div class="hero-divider"></div>
+      <p>Standard Operating Procedures, Battle Drills, and Training Resources for Ghost Platoon personnel. Select a section below to begin.</p>
+      <div class="hero-cards">
+        <div class="hero-card" onclick="showPage('ngt')">
+          <div class="hero-card-icon">⚙</div>
+          <div class="hero-card-label">Document I</div>
+          <div class="hero-card-title">New Guy Training</div>
+        </div>
+        <div class="hero-card" onclick="showPage('drills')">
+          <div class="hero-card-icon">⚡</div>
+          <div class="hero-card-label">Document II</div>
+          <div class="hero-card-title">Battle Drills</div>
+        </div>
+        <div class="hero-card" onclick="showPage('aar')">
+          <div class="hero-card-icon">◈</div>
+          <div class="hero-card-label">Document III</div>
+          <div class="hero-card-title">AARs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NGT -->
+<div class="page" id="page-ngt">
+<div class="content">
+  <div class="section-header">
+    <span class="section-eyebrow">Document I · Version 2.0 · D. Rodriguez</span>
+    <div class="section-title">New Guy Training (NGT)</div>
+    <div class="section-desc">Onboarding training covering kit setup, keybindings, medical SOP, and basic small unit tactics for Ghost Platoon recruits.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-header">
+      <div class="card-title">Section I — Basic Kit &amp; Weapon Platforms</div>
+      <div class="card-badge">Ace Arsenal</div>
+    </div>
+    <p>Trainees establish their basic rifleman kit in Ace Arsenal. Uniform standard is MC with GPLT Patch. Rifle platform runs 5.56 NATO.</p>
+  </div>
+
+  <div class="kit-section">
+    <div class="kit-section-title">⊕ Uniform (Medical)</div>
+    <div class="kit-items">
+      <div class="kit-items-grid">
+        <div class="kit-item">19× Bandage (Elastic)</div>
+        <div class="kit-item">8× Bandage (QuikClot)</div>
+        <div class="kit-item">1× Chest Seal</div>
+        <div class="kit-item">5× Epi</div>
+        <div class="kit-item">2× King LT</div>
+        <div class="kit-item">4× Tourniquet</div>
+        <div class="kit-item">2× Painkiller</div>
+        <div class="kit-item">Blood (500ml)</div>
+        <div class="kit-item">Pulse Oximeter</div>
+        <div class="kit-item">2× Splints</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-section">
+    <div class="kit-section-title">⊕ Vest</div>
+    <div class="kit-items">
+      <div class="kit-items-grid">
+        <div class="kit-item">1× AN/PRC-152 Radio</div>
+        <div class="kit-item">9+1× Primary Rifle Mags</div>
+        <div class="kit-item">2+1× Secondary Mags</div>
+        <div class="kit-item">Blood (500ml)</div>
+        <div class="kit-item">2× Cable Ties</div>
+        <div class="kit-item">1× Galaxy S7 ATAK</div>
+        <div class="kit-item">Vector 21 Nite</div>
+        <div class="kit-item">Compass</div>
+        <div class="kit-item">GPS</div>
+        <div class="kit-item">Map</div>
+        <div class="kit-item">Altimeter Watch</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-section">
+    <div class="kit-section-title">⊕ Backpack</div>
+    <div class="kit-items">
+      <div class="kit-items-grid">
+        <div class="kit-item">1× MicroDAGR GPS</div>
+        <div class="kit-item">1× NVGs (of choice)</div>
+        <div class="kit-item">1× Lock Popper</div>
+        <div class="kit-item">1× Stick Charge</div>
+        <div class="kit-item">1× M152 Firing Device</div>
+        <div class="kit-item">1× Mine Detector</div>
+        <div class="kit-item">1× Entrenching Tool</div>
+        <div class="kit-item">1× Green Spray Paint</div>
+        <div class="kit-item">2× IR Strobe</div>
+        <div class="kit-item">1× IFAK</div>
+        <div class="kit-item">5× Cable Ties</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:2rem">
+    <div class="section-header" style="margin-top:2rem">
+      <span class="section-eyebrow">Section I</span>
+      <div class="section-title" style="font-size:1.4rem">Weapon Platforms</div>
+    </div>
+    <div class="weapons-grid">
+      <div class="weapon-group">
+        <div class="weapon-group-title">Rifles (5.56 NATO)</div>
+        <div class="weapon-item">M4 Block II</div>
+        <div class="weapon-item">M4A1 Tactical</div>
+        <div class="weapon-item">MK-18 MOD 1</div>
+        <div class="weapon-item">SCAR L</div>
+        <div class="weapon-item">URGI</div>
+        <div class="weapon-item">M4A1</div>
+      </div>
+      <div class="weapon-group">
+        <div class="weapon-group-title">Designated Marksman</div>
+        <div class="weapon-item">DD Mk12 (Squad Marksman Only)</div>
+        <div class="weapon-item">M110 (Squad Marksman Only)</div>
+      </div>
+      <div class="weapon-group">
+        <div class="weapon-group-title">Machine Guns</div>
+        <div class="weapon-item">M240B (Gun team only)</div>
+        <div class="weapon-item">M240L (Gun team only)</div>
+        <div class="weapon-item">M249 L</div>
+        <div class="weapon-item">M249 S</div>
+      </div>
+      <div class="weapon-group">
+        <div class="weapon-group-title">Anti-Tank</div>
+        <div class="weapon-item">M136</div>
+        <div class="weapon-item">MAAWS Mk4 Mod 1</div>
+        <div class="weapon-item">Javelin (Gun team only)</div>
+        <div class="weapon-item">Stinger (Handout only)</div>
+      </div>
+      <div class="weapon-group" style="grid-column:1/-1">
+        <div class="weapon-group-title">Pistols</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.1rem">
+          <div class="weapon-item">Sig P320</div>
+          <div class="weapon-item">Glock 19</div>
+          <div class="weapon-item">M320 GL</div>
+          <div class="weapon-item">FNX-45</div>
+          <div class="weapon-item">Glock 22</div>
+          <div class="weapon-item">M9 Beretta</div>
+          <div class="weapon-item">M1911</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:2rem">
+    <div class="section-header">
+      <span class="section-eyebrow">Section II</span>
+      <div class="section-title" style="font-size:1.4rem">Keybindings</div>
+      <div class="section-desc">Changes ease mind-to-key mapping. Some defaults conflict; others are safety-critical.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:.8rem">Default Keybinds</div>
+      <table class="kb-table">
+        <thead><tr><th>Category</th><th>Action &amp; Binding</th></tr></thead>
+        <tbody>
+          <tr><td>Common</td><td>Unbind <kbd>"last help"</kbd> key</td></tr>
+          <tr><td>Weapons</td><td>Rebind "throw" → <kbd>G</kbd> <kbd>G</kbd></td></tr>
+          <tr><td>Infantry Movements</td><td>Rebind "step over" → <kbd>CTRL</kbd>+<kbd>V</kbd></td></tr>
+          <tr><td>Enhanced Movement Rework</td><td>All-in-one action → <kbd>SHIFT</kbd>+<kbd>V</kbd></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title" style="margin-bottom:.8rem">AddOn Keybinds</div>
+      <table class="kb-table">
+        <thead><tr><th>Mod</th><th>Binding</th></tr></thead>
+        <tbody>
+          <tr><td>Ace Common</td><td>Open/Close Door → Unbind</td></tr>
+          <tr><td>ACE Movement</td><td>Unbind All</td></tr>
+          <tr><td>CIA SAC/SOG Mods</td><td>Kick door → <kbd>CTRL</kbd>+<kbd>SPACE</kbd></td></tr>
+          <tr><td>cTab</td><td>Main Interface → <kbd>CTRL</kbd>+<kbd>H</kbd><br>Secondary → <kbd>SHIFT</kbd>+<kbd>H</kbd></td></tr>
+          <tr><td>Rads Walking Speed</td><td>Set Speed Max → <kbd>C</kbd></td></tr>
+          <tr><td>TR21 Chemlight Drop</td><td>Green → <kbd>CTRL</kbd>+<kbd>4</kbd> · Blue → <kbd>CTRL</kbd>+<kbd>5</kbd> · IR → <kbd>CTRL</kbd>+<kbd>6</kbd></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-bottom:2rem">
+    <div class="section-header">
+      <span class="section-eyebrow">Section III</span>
+      <div class="section-title" style="font-size:1.4rem">ACE Medical Training</div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Self Aid</div><div class="card-badge">Press H</div></div>
+        <ul>
+          <li>Finish Fight</li>
+          <li>Stop Bleeding</li>
+          <li>Seek Medic Aid</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Buddy Aid</div><div class="card-badge">Press H</div></div>
+        <ul>
+          <li>Finish Fight</li>
+          <li>Check the Scene</li>
+          <li>Move Patient to Secure Area</li>
+          <li>Stop Bleeding</li>
+          <li>Airway Management</li>
+          <li>Stitch if Able</li>
+          <li>Check Fluids (no TQ limb IV)</li>
+          <li>Check Heart Rate</li>
+          <li>If None: Epi then CPR</li>
+          <li>Wait and Supervise</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-header">
+      <span class="section-eyebrow">Section IV</span>
+      <div class="section-title" style="font-size:1.4rem">Formations</div>
+    </div>
+    <div class="formation-grid">
+      <div class="formation-card">
+        <div class="formation-name">Wedge</div>
+        <div class="formation-row"><span class="formation-row-label pro-label">Pro</span><span class="formation-row-text">Immediate fires in all directions</span></div>
+        <div class="formation-row"><span class="formation-row-label con-label">Con</span><span class="formation-row-text">Rough terrain / poor visibility</span></div>
+        <div class="formation-row"><span class="formation-row-label use-label">Use</span><span class="formation-row-text">Open terrain</span></div>
+      </div>
+      <div class="formation-card">
+        <div class="formation-name">Column</div>
+        <div class="formation-row"><span class="formation-row-label pro-label">Pro</span><span class="formation-row-text">Immediate fire left and right</span></div>
+        <div class="formation-row"><span class="formation-row-label con-label">Con</span><span class="formation-row-text">Limited security front/rear</span></div>
+        <div class="formation-row"><span class="formation-row-label use-label">Use</span><span class="formation-row-text">Wooded terrain (10m spacing)</span></div>
+      </div>
+      <div class="formation-card">
+        <div class="formation-name">Staggered Column</div>
+        <div class="formation-row"><span class="formation-row-label pro-label">Pro</span><span class="formation-row-text">Security</span></div>
+        <div class="formation-row"><span class="formation-row-label con-label">Con</span><span class="formation-row-text">Long to move on line</span></div>
+        <div class="formation-row"><span class="formation-row-label use-label">Use</span><span class="formation-row-text">Roads / urban terrain</span></div>
+      </div>
+      <div class="formation-card">
+        <div class="formation-name">Line</div>
+        <div class="formation-row"><span class="formation-row-label pro-label">Pro</span><span class="formation-row-text">Maximum firepower to front</span></div>
+        <div class="formation-row"><span class="formation-row-label con-label">Con</span><span class="formation-row-text">Minimum fire left/right</span></div>
+        <div class="formation-row"><span class="formation-row-label use-label">Use</span><span class="formation-row-text">Reacting to contact</span></div>
+      </div>
+      <div class="formation-card">
+        <div class="formation-name">Echelon L/R</div>
+        <div class="formation-row"><span class="formation-row-label pro-label">Pro</span><span class="formation-row-text">High firepower one side</span></div>
+        <div class="formation-row"><span class="formation-row-label con-label">Con</span><span class="formation-row-text">Disadvantaged to opposite side</span></div>
+        <div class="formation-row"><span class="formation-row-label use-label">Use</span><span class="formation-row-text">Expecting fire from specific squad</span></div>
+      </div>
+      <div class="formation-card">
+        <div class="formation-name">Diamond</div>
+        <div class="formation-row"><span class="formation-row-label pro-label">Pro</span><span class="formation-row-text">360° security / HVT protection</span></div>
+        <div class="formation-row"><span class="formation-row-label con-label">Con</span><span class="formation-row-text">Hard to maintain spacing</span></div>
+        <div class="formation-row"><span class="formation-row-label use-label">Use</span><span class="formation-row-text">Protect HVTs</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- BATTLE DRILLS -->
+<div class="page" id="page-drills">
+<div class="content">
+  <div class="section-header">
+    <span class="section-eyebrow">Document II · Version 2.0 · Ghost Platoon Document Team</span>
+    <div class="section-title">Battle Drills</div>
+    <div class="section-desc">14 battle drills covering direct fire contact, assaults, obstacle breaching, IED response, and vehicle operations. Click any drill to expand.</div>
+  </div>
+  <div id="drills-container"></div>
+</div>
+</div>
+
+<!-- AAR -->
+<div class="page" id="page-aar">
+<div class="content">
+  <div class="section-header">
+    <span class="section-eyebrow">Document III · Version 2.0 · Ghost Platoon Document Team</span>
+    <div class="section-title">AARs — A Small Unit Perspective</div>
+    <div class="section-desc">The After-Action Review is a professional discussion enabling units and leaders to understand why events occurred and adapt accordingly.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-header"><div class="card-title">What is an AAR?</div></div>
+    <p>An after-action review is an assessment conducted after an event or major activity that allows participants to learn what and why something happened — and how the unit can improve through change.</p>
+    <div class="aar-advantages" style="margin-top:.75rem">
+      <span class="aar-advantages-label">Advantages over a critique</span>
+      <ul class="aar-adv-list">
+        <li>Does not judge success or failure</li>
+        <li>Attempts to discover why things happened</li>
+        <li>Focuses directly on the tasks and goals to be accomplished</li>
+        <li>Encourages participants to recall more and share lessons learned</li>
+      </ul>
+    </div>
+    <p style="margin-top:.75rem;font-style:italic;color:var(--muted);font-size:.85rem">The AAR may be conducted after each identifiable event as a live learning process — not only at mission end.</p>
+  </div>
+
+  <div class="aar-phase" data-num="01">
+    <span class="aar-phase-num">Phase 01</span>
+    <div class="aar-phase-title">The Plan — Review What Was Supposed to Happen</div>
+    <p>A concise restatement of the operation order (OPORD). The patrol leader stands in front of the team and restates the commander's intent and scheme of maneuver.</p>
+    <p>No conjecture or grandstanding — simply a restatement of the plan. Begin by asking each element leader what mission they were tasked with, in their own words. Listen for clarity of focus and understanding of their role.</p>
+  </div>
+
+  <div class="aar-phase" data-num="02">
+    <span class="aar-phase-num">Phase 02</span>
+    <div class="aar-phase-title">The Performance — Establish What Happened</div>
+    <p>Those on the ground state what really happened. The PL is generally discouraged from speaking unless they hold unique perspective. The goal is to find the gap between the plan and actual performance.</p>
+    <p>Start with initial movement: Did the patrol hit their start time? Time hacks for phase lines or ORP? Address actions in the ORP and on the objective. Most issues fall within each element's ability to move, shoot, and communicate.</p>
+  </div>
+
+  <div class="aar-phase" data-num="03">
+    <span class="aar-phase-num">Phase 03</span>
+    <div class="aar-phase-title">The Issues — Determining What Was Right or Wrong</div>
+    <p>Identify reasons for the discrepancy between plan and performance. Allow venting — both positive and negative. Invite everyone to speak their mind.</p>
+    <p>Use the "nut shelling" technique: alternate between asking the most vocal member what needs to be a future training focus, and what was well executed. Listen for consensus. Make the most negative troops give a positive observation, and vice versa.</p>
+  </div>
+
+  <div class="aar-phase" data-num="04">
+    <span class="aar-phase-num">Phase 04</span>
+    <div class="aar-phase-title">The Fix — Determine What Should Be Done Differently</div>
+    <p>Identify by name who is responsible for correcting each deficiency. Do not assume all responsibility falls on the PL. Subordinate leaders and experienced troops can lead training or take ownership of equipment.</p>
+    <p>Assign a leadership role in training, fix or acquire necessary equipment, or research the problem and report findings back to the team. Each issue must have an owner.</p>
+  </div>
+</div>
+</div>
+
+<footer>
+  <p>Ghost Platoon · 2/75th Ranger Regiment · Rangers Lead The Way, All The Way</p>
+</footer>
+
+<script>
+const drillData=[
+  {num:"BD-01",name:"React to Direct Fire Contact",cond:"Unit is moving or halted; enemy initiates direct fire.",cue:"Enemy initiates direct fire contact.",std:"Element returns fire immediately, seeks cover, locates enemy, places well-aimed fire. Leader reports contact to higher HQ.",steps:["Return well-aimed fire on known enemy positions immediately. Vehicles move out of beaten zone.","Report 3-D's to Squad Leader: Distance, Direction, Description.","Assume nearest covered and concealed position. Mounted soldiers dismount and provide suppressive fire.","Element leaders locate and engage known enemy positions; pass info to unit leader.","Element leaders control fire using standard fire commands (Alert, Weapon, Target, Direction, Range, Method, Execution).","Maintain contact with leader, other soldiers, and vehicles left/right.","Unit leader moves to element in contact, links up with its leader. Brings RTO, FO, element leader, and crew-served weapon.","Unit leader assesses: enemy location, size of force, vulnerable flanks, covered flanking routes.","Unit leader decides: assault, bypass, or break contact. Reports to higher and begins maneuver."]},
+  {num:"BD-02",name:"Conduct a Platoon Assault",cond:"Platoon moving as part of larger force in movement to contact or attack.",cue:"Enemy initiates direct fire on lead squad.",std:"Lead squad locates and suppresses enemy, establishes supporting fire, assaults using fire and maneuver. Platoon destroys or causes withdrawal, then consolidates.",steps:["Squad in contact returns fire; dismounts; attempts suppressive fires; notifies platoon leader.","Platoon leader orders dismount; platoon sergeant takes control of vehicles.","PL, RTO, FO, squad leader of next squad, and one MG team move to link up with squad in contact.","If suppression cannot be achieved, deploy additional squads and MG teams to support-by-fire position.","Lead squad locates, reports enemy size and location to platoon leader.","PL maneuvers assaulting squad(s) to assault position once base of fire is in position.","FO shifts indirect fires to isolate enemy. Assaulting squads fight through using fire and movement.","Platoon consolidates: establishes local security, assigns sectors, develops quick-fire plan.","Platoon reorganizes: redistributes ammo, treats casualties, processes EPWs, sends SITREP to company."]},
+  {num:"BD-02A",name:"Conduct a Squad Assault",cond:"Squad moving as part of platoon in movement to contact or attack.",cue:"Enemy initiates direct fire contact.",std:"Squad locates and suppresses enemy, assaults using fire and maneuver, destroys or causes withdrawal, consolidates.",steps:["Team in contact returns well-aimed fire; assumes nearest covered positions.","Fire team not in contact takes covered positions; observes flanks and rear.","Squad leader reports contact to platoon leader; moves toward fire team in contact.","Squad leader assesses: can fire team in contact gain suppressive fire?","If YES: suppress crew-served weapons first, place smoke, sustain fire rate. If NO: deploy second fire team to support-by-fire position.","Squad leader signals supporting team to shift fires; assaulting team maintains effective fires throughout.","Assaulting element fights through using fire and movement; 3-5 second rushes; buddy team coordination.","Squad consolidates: local security, sectors of fire, hasty positions, quick fire plan.","Squad leader accounts for all; redistributes ammo; reports to platoon leader."]},
+  {num:"BD-03",name:"Break Contact",cond:"Unit in contact; unit leader decides to break contact.",cue:"Unit leader gives command to break contact.",std:"Unit breaks contact using fire and movement until enemy cannot observe or place fire. Leader reports to higher HQ.",steps:["Unit leader directs an element to suppress the enemy.","Vehicles directed to support disengagement of dismounted element. If unavailable, one squad/fire team suppresses.","Unit leader orders distance, direction, terrain feature, or last rally point for movement.","Employ indirect fires to suppress enemy positions.","Bounding element moves to overwatch; employs smoke to screen movement; uses frags/concussion grenades if needed.","Base-of-fire element continues to suppress.","Moving element occupies overwatch and engages enemy.","Alternate bounding away from enemy until contact is broken or passing through higher support-by-fire.","Account for soldiers; consider changing direction once contact broken to defeat enemy indirect fire tracking."]},
+  {num:"BD-04",name:"React to Ambush (Near)",cond:"Unit moving tactically. Enemy initiates contact with direct fire within hand grenade range.",cue:"Enemy initiates ambush within hand grenade range.",std:"Soldiers in kill zone return fire and assault through. Soldiers outside kill zone place suppressive fire. Unit assaults through and destroys enemy.",steps:["Soldiers in kill zone immediately return fire. If cover unavailable: assault through kill zone immediately.","Alternatively: occupy nearest covered position and throw smoke grenades.","Soldiers in kill zone assault through ambush using fire and movement.","Soldiers outside kill zone identify enemy; place well-aimed suppressive fire; shift fire as others assault.","Soldiers assault through and destroy enemy position.","Unit leader reports contact to higher HQ.","Mounted: vehicle gunners return fire, deploy vehicle smoke, move out of kill zone. Disabled vehicles dismount and seek cover."]},
+  {num:"BD-05",name:"Knock Out a Bunker",cond:"Unit moving; enemy initiates contact from concealed bunker network.",cue:"Unit receives order to knock out enemy bunker.",std:"Unit destroys designated bunkers by killing, capturing, or forcing withdrawal. Maintains sufficient force to repel counterattack.",steps:["Squad in contact establishes base of fire; gains fire superiority; deploys SLMs as required.","FO calls for and adjusts indirect fires including smoke.","Platoon leader and FO move forward; assess enemy composition, disposition, capabilities.","Identify: which bunker poses greatest threat, location of adjacent bunkers, obstacle breaching requirements.","Supporting element isolates and suppresses bunker. Assault squad moves along covered route to assault position.","Upon signal, supporting element shifts/ceases fire. Buddy team #2 moves to blind spot near bunker.","Buddy team #2: one soldier covers exit; other cooks off grenade (max 2 sec), announces FRAG OUT, throws through aperture.","After detonation: first soldier into bunker from exit side; team clears. Mark bunker; signal clear.","Platoon leader directs next bunker assault. Rotates squads as necessary. Sends SITREP."]},
+  {num:"BD-06",name:"Enter and Clear a Room",cond:"Unit conducting operations; ordered to clear a room. Noncombatants may be present.",cue:"Order of unit leader or clearing team leader.",std:"Room cleared by killing or capturing enemy while minimizing friendly and noncombatant casualties. Team complies with ROE.",steps:["Unit leader positions to control security and clearing teams. Directs securing of corridors/hallways.","Team leader positions outside room; unit leader gives signal to clear.","If high-intensity: cook off grenade (frag, concussion, or stun), throw into room, announce FRAG OUT — consistent with ROE.","First two soldiers enter almost simultaneously, each moving to opposite corners along path of least resistance.","First soldier: moves to point of domination, scans sector, eliminates threats. Second soldier: opposite direction, same.","Third soldier: enters moving opposite of second soldier; scans and clears sector to point of domination.","Fourth soldier: moves opposite of third soldier; dominates assigned sector.","All soldiers engage combatants with precision. Identify noncombatants. Announce SHORT ROOM if applicable.","Clearing team leader announces CLEAR. Mark entry point per unit SOP. Report first room clear to higher."]},
+  {num:"BD-07",name:"Enter Trench and Secure Foothold",cond:"Platoon receives fire from enemy trench; ordered to secure a foothold.",cue:"Platoon leader initiates drill ordering assault element to secure foothold.",std:"Platoon quickly identifies entry point, secures it, enters trench, secures area for follow-on forces.",steps:["Execute Battle Drill 1 (React to Direct Fire Contact).","Squad leader reports location of hostile fire using SALUTE format.","Platoon leader evaluates situation; conducts quick recon for enemy flanks and mutually supporting positions.","Platoon leader selects entry point; directs covered/concealed route; directs maneuver element to near side.","Execute SOSRA: Suppress and Obscure — FO adjusts indirect fire; platoon sergeant directs base-of-fire squad; deploy smoke.","Secure near side and reduce obstacle. Squad leader designates entry point; base-of-fire shifts away; assaulting team positions.","First two assault soldiers cook off grenades (max 2 sec), announce FRAG OUT, throw into trench.","Soldiers roll into trench back-to-back; move in opposite directions to first corner or intersection; block enemy movement.","Remainder of assault team enters; clears to first trench junction; announces CLEAR. Squad leader reports foothold secure."]},
+  {num:"BD-08",name:"Breach a Mined Wire Obstacle",cond:"Platoon encounters mine wire obstacle preventing company movement. Enemy engages from far side.",cue:"Lead element encounters mine wire obstacle; unit leader orders breach.",std:"Platoon breaches obstacle; moves all personnel and equipment through; secures far side.",steps:["Squad in contact executes actions on contact; deploys; establishes fire superiority.","Platoon leader designates support-by-fire squad; indicates route, enemy position, breach point, and lifting/shifting instructions.","Support-by-fire element destroys/suppresses enemy weapons; obscures with smoke.","Platoon leader designates breach squad and assault squad; leads them along covered/concealed route.","FO calls for and adjusts indirect fires in support of breach and assault.","Breach squad: one fire team provides base of fire at breach point. Breaching team employs smoke at breach point.","Breaching team leader and auto rifleman provide close-in security. Grenadier and rifleman probe for mines and cut wire.","Once breached, breaching team moves to far side, signals squad leader. Base-of-fire team moves through breach.","Breach widened for vehicle passage. PL provides SITREP; appoints guides for company movement through breach."]},
+  {num:"BD-09",name:"React to Indirect Fire",cond:"Unit moving or stationary; Soldier hears INCOMING or rounds impact nearby.",cue:"Any Soldier announces INCOMING or round impacts.",std:"Dismounted soldiers immediately seek best available cover and move to designated rally point. Vehicles move out of impact area.",steps:["Any Soldier announces: INCOMING!","Dismounted: assume prone position or move to immediate cover during initial impacts.","Unit leader orders direction, distance, and rally point.","Soldiers move rapidly to designated rally point after impacts.","Mounted: vehicle commanders repeat alert over radio. Leaders give direction and linkup location.","Soldiers close hatches; gunners get below turret shields or into vehicle.","Drivers move rapidly out of impact area in ordered direction.","Unit leaders report contact to higher HQ."]},
+  {num:"BD-10",name:"React to a Chemical Attack",cond:"Unit moving or stationary; attacked with chemical or biological agent; chemical alarm activates.",cue:"Any Soldier gives oral/visual signal for chemical attack or alarm activates.",std:"All Soldiers don protective mask within 9 seconds (15 with hood). Assume MOPP4 within 8 minutes. Leader submits CBRN 1 report.",steps:["Element dons protective mask immediately.","Element gives vocal or non-vocal alarm.","Use appropriate skin decontamination kit within 1 minute if necessary.","Assume MOPP4 within 15 minutes.","Initiate self-aid or buddy-aid as necessary.","Identify chemical agent using M8 detector paper and M256 detector kit.","Element leader reports attack to higher HQ using CBRN 1 report.","Determine if decontamination required; request support; mark contaminated area.","Request guidance from higher for follow-on missions."]},
+  {num:"BD-11",name:"React to an IED",cond:"Element performing military operation; suspected IED found.",cue:"Element encounters a suspected IED.",std:"React using 3-Ds (Distance, Direction, Description) then execute 5-Cs (Check, Confirm, Clear, Cordon, Control).",steps:["Soldier reports IED using 3-Ds: Distance from initial finder; Direction to IED; Description without moving closer.","CHECK: all personnel conduct 5/25/200 meter checks from their positions for secondary/tertiary devices.","CONFIRM: confirm existence from safe distance using standoff means (robot, optics). Call EOD 9-line explosive hazard spot report.","CLEAR: clear area of all personnel working outward from device. Move several hundred meters; vary distance to avoid predictability.","CORDON: establish security cordon with blocking positions. Deny enemy observation of friendly TTPs. Continue checking for secondary devices.","CONTROL: control area inside cordon; prevent personnel from straying close. Conduct 5-meter and 25-meter visual checks systematically.","Driver and gunner remain inside vehicle for security purposes.","Avoid communications or electronic equipment (except crew devices) within secured exclusion area.","Minimum safe distance for exposed personnel: 300 meters."]},
+  {num:"BD-12",name:"Dismount a BFV and ICV",cond:"Platoon moving in BFV or ICV; ordered to dismount.",cue:"Order given to prepare to dismount.",std:"BFV: each fire team dismounts in 30 sec (ramp) or 45 sec (combat door). ICV: dismount by seat number order. Squad establishes security.",steps:["Platoon leader selects dismount point.","PL gives warning: PREPARE TO DISMOUNT. Designates weapons composition and dismount instructions.","Drivers move vehicles to dismount point; orient front toward enemy.","Gunners orient turret to provide overwatch and supporting fire.","PL gives command: DISMOUNT.","BFV: Fire team members dismount in order 10/9 first, 8/7 second, 6/5 third, 1 fourth.","ICV: Dismount by seats 10/11 first, 8/9 second, 6/7 third, 4/5 fourth, seat 3 fifth.","Fire teams link up with squads; squad leaders establish contact with platoon leader.","Mounted element occupies covered positions and overwatches dismounted element."]},
+  {num:"BD-13",name:"Mount a BFV and ICV",cond:"Squads dismounted; ordered to remount vehicle.",cue:"Unit leader gives order: MOUNT UP.",std:"Vehicle moves to covered position to protect remounting squads. Squads mount in specified order.",steps:["Platoon/squad leader orders PREPARE TO MOUNT; designates mount point.","Both mounted and dismounted elements move to mount point using covered/concealed routes.","Crew overwatches primary enemy avenues of approach; provides supporting fire and smoke if necessary.","BC orders driver to lower ramp or open ramp access door.","PL/SL orders: MOUNT. Specifies which team mounts first while other provides overwatch.","Soldiers remount in reverse sequence of dismount.","BFV: seat 1 first, 6/5 second, 8/7 third, 10/9 fourth. ICV: seat 3 first then reverse of dismount sequence.","Senior leader accounts for all personnel and equipment; ensures weapons on SAFE; announces ALL UP.","BC raises ramp. PL designates direction, formation, and movement technique from mount point."]},
+  {num:"BD-14",name:"Execute Action Right or Left While Mounted",cond:"Platoon moving, conducting operations; must execute action right or left.",cue:"Unit leader signals action right or left via arm-and-hand, flags, or radio.",std:"Mounted platoon changes direction into line formation, orienting weapons on enemy force.",steps:["PL signals action right or left using arm-and-hand signals, flags, or radio.","Drivers immediately execute turn in indicated direction while moving into line formation.","Platoon sergeant orients vehicle on PL's vehicle. Wingmen orient on PL and PSG vehicles.","PL orders vehicle commanders to seek covered positions or continue moving in indicated direction.","Vehicle commanders orient main weapons toward enemy; search for targets.","PL determines if necessary to dismount rifle squads.","PL reports situation to company commander if needed."]}
+];
+
+function buildDrills(){
+  const c=document.getElementById('drills-container');
+  drillData.forEach(d=>{
+    const el=document.createElement('div');
+    el.className='drill';
+    el.innerHTML=`<div class="drill-header" onclick="toggleDrill(this.parentElement)">
+      <span class="drill-num">${d.num}</span>
+      <span class="drill-name">${d.name}</span>
+      <span class="drill-toggle">&#9660;</span>
+    </div>
+    <div class="drill-body">
+      <div class="drill-meta">
+        <div class="drill-meta-box"><span class="drill-meta-label">Conditions</span><div class="drill-meta-text">${d.cond}</div></div>
+        <div class="drill-meta-box"><span class="drill-meta-label">Standards</span><div class="drill-meta-text">${d.std}</div></div>
+      </div>
+      <ul class="drill-steps">${d.steps.map((s,i)=>`<li><span class="step-num">${String(i+1).padStart(2,'0')}</span><span>${s}</span></li>`).join('')}</ul>
+    </div>`;
+    c.appendChild(el);
+  });
+}
+
+function toggleDrill(el){
+  el.classList.toggle('open');
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const tabs={home:0,ngt:1,drills:2,aar:3};
+  document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+buildDrills();
+</script>
+</body>
+</html>
