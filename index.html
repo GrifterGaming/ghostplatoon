@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EIB Study Guide — Ghost Platoon</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --crimson: #9B1A34;
+    --crimson-dark: #6D0E22;
+    --crimson-light: #C0274A;
+    --tan: #C8B89A;
+    --tan-light: #EDE3D4;
+    --dark: #1A1A1A;
+    --mid: #2E2E2E;
+    --surface: #F7F3EE;
+    --white: #FFFFFF;
+    --text: #1F1F1F;
+    --text-muted: #5A5A5A;
+    --border: #D8CCBC;
+    --gold: #B8952A;
+    --green: #2A6E3A;
+    --amber: #C07A1A;
+    --red-status: #9B1A34;
+    --black-status: #1A1A1A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+  .site-header::before {
+    content: 'EIB';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Oswald', sans-serif;
+    font-size: 200px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.04);
+    letter-spacing: -10px;
+    pointer-events: none;
+  }
+  .header-inner {
+    display: grid;
+    grid-template-columns: 6px 1fr;
+    gap: 0;
+    width: 100%;
+  }
+  .header-bar {
+    background: var(--crimson);
+    width: 6px;
+  }
+  .header-content {
+    padding: 40px 48px;
+  }
+  .unit-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--tan);
+    margin-bottom: 8px;
+  }
+  .site-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .site-title span {
+    color: var(--crimson-light);
+  }
+  .site-subtitle {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--tan);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .header-meta {
+    margin-top: 20px;
+    display: flex;
+    gap: 24px;
+  }
+  .meta-pill {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    color: var(--tan);
+    letter-spacing: 1px;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    width: 100%;
+    min-height: calc(100vh - 160px);
+  }
+
+  /* ── SIDEBAR NAV ── */
+  .sidebar {
+    background: var(--dark);
+    padding: 32px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--crimson); }
+  .nav-label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--tan);
+    opacity: 0.6;
+    padding: 0 24px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    margin-bottom: 8px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+  }
+  .nav-item:hover, .nav-item.active {
+    background: rgba(155, 26, 52, 0.25);
+  }
+  .nav-item.active .nav-dot { background: var(--crimson-light); }
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .nav-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+  }
+  .nav-item.active .nav-text { color: var(--white); }
+  .nav-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    color: var(--crimson-light);
+    margin-left: auto;
+    opacity: 0.7;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    padding: 0;
+    background: var(--surface);
+    min-width: 0;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    display: none;
+    padding: 48px 52px;
+    animation: fadeIn 0.3s ease;
+    border-bottom: 1px solid var(--border);
+  }
+  .section.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+    position: relative;
+  }
+  .section-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--crimson);
+    background: var(--tan-light);
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .section-title-group {}
+  .section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--dark);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .section-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* ── ALERT / WARNING BOXES ── */
+  .alert {
+    display: flex;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 3px;
+    margin-bottom: 24px;
+    border-left: 4px solid;
+  }
+  .alert-danger {
+    background: #FDF0F2;
+    border-color: var(--crimson);
+    color: var(--crimson-dark);
+  }
+  .alert-warning {
+    background: #FFF8EC;
+    border-color: var(--gold);
+    color: #7A5A10;
+  }
+  .alert-info {
+    background: #EFF5FF;
+    border-color: #3B6CC9;
+    color: #1D3A7A;
+  }
+  .alert-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .alert-text {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .alert-text strong { font-weight: 600; }
+
+  /* ── EVOLUTION CARDS ── */
+  .evolutions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .evo-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--crimson);
+    padding: 20px;
+    border-radius: 2px;
+  }
+  .evo-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .evo-badge {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    background: var(--crimson);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+  .evo-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--dark);
+  }
+  .evo-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* ── Q&A BLOCKS ── */
+  .qa-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .qa-question {
+    padding: 14px 18px;
+    background: var(--tan-light);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    cursor: pointer;
+    user-select: none;
+  }
+  .qa-question:hover { background: #E8DDD0; }
+  .qa-q-label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    background: var(--crimson);
+    color: white;
+    padding: 1px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .qa-chevron {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--crimson);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .qa-block.open .qa-chevron { transform: rotate(180deg); }
+  .qa-answer {
+    display: none;
+    padding: 14px 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    border-left: 3px solid var(--crimson);
+    margin-left: 18px;
+  }
+  .qa-block.open .qa-answer { display: block; }
+  .qa-a-label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* ── CONTENT BLOCKS ── */
+  .content-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+  .block-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--dark);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .block-title::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 16px;
+    background: var(--crimson);
+    border-radius: 2px;
+  }
+
+  /* ── STEP LIST ── */
+  .step-list {
+    list-style: none;
+    counter-reset: steps;
+  }
+  .step-list li {
+    counter-increment: steps;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-list li::before {
+    content: counter(steps);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--crimson);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── BULLET LIST ── */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    align-items: flex-start;
+    border-bottom: 1px dashed var(--border);
+  }
+  .bullet-list li:last-child { border-bottom: none; }
+  .bullet-list li::before {
+    content: '›';
+    color: var(--crimson);
+    font-size: 16px;
+    font-weight: 600;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+
+  /* ── FORMATION TABLE ── */
+  .formation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .formation-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .formation-card-head {
+    background: var(--dark);
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 10px 14px;
+    text-transform: uppercase;
+  }
+  .formation-card-body {
+    padding: 12px 14px;
+  }
+  .fc-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--border);
+    gap: 8px;
+  }
+  .fc-row:last-child { border-bottom: none; }
+  .fc-label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .fc-value { font-size: 12px; color: var(--text); text-align: right; }
+  .fc-pro { color: var(--green); }
+  .fc-con { color: var(--crimson); }
+  .fc-use { color: var(--gold); }
+
+  /* ── CODE BLOCK (radio comms) ── */
+  .comms-block {
+    background: var(--dark);
+    border-radius: 3px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    color: #E0E0E0;
+    line-height: 1.8;
+  }
+  .comms-line { margin-bottom: 4px; }
+  .comms-label-g { color: #5BB8A8; font-weight: 600; }
+  .comms-label-s { color: #E08B4A; font-weight: 600; }
+  .comms-text { color: #D0D0D0; }
+  .comms-highlight { color: #F5C842; }
+
+  /* ── BADGE GRID ── */
+  .badge-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .badge {
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    border: 2px solid;
+    text-transform: uppercase;
+  }
+  .badge-red { background: #FFF0F2; border-color: var(--crimson); color: var(--crimson-dark); }
+  .badge-green { background: #EEF7F0; border-color: var(--green); color: var(--green); }
+  .badge-amber { background: #FFF7EC; border-color: var(--amber); color: var(--amber); }
+  .badge-black { background: var(--dark); border-color: var(--dark); color: white; }
+
+  /* ── NOGO TABLE ── */
+  .nogo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .nogo-table th {
+    background: var(--dark);
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-align: left;
+  }
+  .nogo-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+  }
+  .nogo-table tr:hover td { background: var(--tan-light); }
+  .nogo-badge {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--crimson);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+
+  /* ── SMOKE DESIGNATORS ── */
+  .smoke-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .smoke-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .smoke-header {
+    padding: 12px 16px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: white;
+    text-transform: uppercase;
+  }
+  .smoke-blue .smoke-header { background: #1A4FAF; }
+  .smoke-red .smoke-header { background: #9B1A34; }
+  .smoke-yellow .smoke-header { background: #9A7010; }
+  .smoke-purple .smoke-header { background: #5A2080; }
+  .smoke-body {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* ── MARCH acronym ── */
+  .acronym-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .acronym-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 12px 16px;
+  }
+  .acronym-letter {
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--crimson);
+    line-height: 1;
+    width: 30px;
+    flex-shrink: 0;
+  }
+  .acronym-content {}
+  .acronym-word {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .acronym-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ── STATUS COLORS ── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .status-card {
+    padding: 14px;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .status-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: white;
+  }
+  .status-range {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    margin-top: 4px;
+  }
+  .s-green { background: var(--green); }
+  .s-amber { background: var(--amber); }
+  .s-red { background: var(--crimson); }
+  .s-black { background: var(--dark); }
+
+  /* ── SUBHEADING ── */
+  .sub-heading {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sub-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── TWO-COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ── TERRAIN ── */
+  .terrain-group {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .terrain-group-head {
+    background: var(--mid);
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .terrain-count {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    background: var(--crimson);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  .terrain-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+  .terrain-item {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    background: var(--tan-light);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+
+  /* ── BD CARD ── */
+  .bd-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--crimson);
+    border-radius: 2px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .bd-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--crimson-dark);
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .bd-num {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    background: var(--crimson);
+    color: white;
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  /* ── MOBILE ── */
+  /* ── WIDE SCREENS (1920px+) ── */
+  @media (min-width: 1920px) {
+    .layout { grid-template-columns: 300px 1fr; }
+    .sidebar { padding: 40px 0; }
+    .nav-item { padding: 12px 32px; }
+    .nav-text { font-size: 14px; }
+    .section { padding: 56px 80px; }
+    .section-title { font-size: 40px; }
+    .site-title { font-size: 64px; }
+    .header-content { padding: 52px 64px; }
+    .evolutions-grid { grid-template-columns: repeat(3, 1fr); }
+    .formation-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (min-width: 2560px) {
+    .layout { grid-template-columns: 340px 1fr; }
+    .section { padding: 64px 120px; }
+    .nav-item { padding: 14px 36px; }
+    .nav-text { font-size: 15px; }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 720px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; display: flex; flex-wrap: wrap; gap: 4px; padding: 12px; }
+    .nav-item { padding: 6px 12px; border-radius: 2px; }
+    .section { padding: 24px 20px; }
+    .site-title { font-size: 32px; }
+    .header-content { padding: 24px 20px; }
+    .two-col { grid-template-columns: 1fr; }
+    .status-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-bar"></div>
+    <div class="header-content">
+      <div class="unit-label">2/75th Ranger Regiment · Ghost Platoon</div>
+      <h1 class="site-title">Expert Infantry <span>Badge</span></h1>
+      <div class="site-subtitle">Study Guide — All Lanes Reference</div>
+      <div class="header-meta">
+        <span class="meta-pill">VER 1.0</span>
+        <span class="meta-pill">22 NOV 2023</span>
+        <span class="meta-pill">8 LANES</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-label">Lanes</div>
+    <a class="nav-item active" onclick="showSection('explosives',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Explosives</span>
+      <span class="nav-number">01</span>
+    </a>
+    <a class="nav-item" onclick="showSection('callfire',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Call For Fire</span>
+      <span class="nav-number">02</span>
+    </a>
+    <a class="nav-item" onclick="showSection('landnav',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Land Nav</span>
+      <span class="nav-number">03</span>
+    </a>
+    <a class="nav-item" onclick="showSection('grenade',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Grenade Range</span>
+      <span class="nav-number">04</span>
+    </a>
+    <a class="nav-item" onclick="showSection('sut',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">SUT Lane</span>
+      <span class="nav-number">05</span>
+    </a>
+    <a class="nav-item" onclick="showSection('vehicle',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Vehicle</span>
+      <span class="nav-number">06</span>
+    </a>
+    <a class="nav-item" onclick="showSection('weapons',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Weapons</span>
+      <span class="nav-number">07</span>
+    </a>
+    <a class="nav-item" onclick="showSection('medical',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Medical</span>
+      <span class="nav-number">08</span>
+    </a>
+    <div class="nav-label" style="margin-top:16px;">Reference</div>
+    <a class="nav-item" onclick="showSection('smoke',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Smoke Colors</span>
+    </a>
+    <a class="nav-item" onclick="showSection('appendix',this)" href="#">
+      <div class="nav-dot"></div>
+      <span class="nav-text">Appendix</span>
+    </a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ═══ EXPLOSIVES ═══ -->
+    <section class="section active" id="explosives">
+      <div class="section-header">
+        <div class="section-number">LANE 01</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Explosives Lane</h2>
+          <p class="section-desc">6 evolutions · 2 attempts · General knowledge tested throughout</p>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <div class="alert-icon">⚠</div>
+        <div class="alert-text"><strong>Fail conditions:</strong> Injury to candidate or instructor = double fail. Accidental / premature / failure to detonate = failed attempt. SOP violations at any point = failed attempt.</div>
+      </div>
+
+      <div class="alert alert-warning">
+        <div class="alert-icon">📋</div>
+        <div class="alert-text"><strong>General Knowledge rule:</strong> 1 wrong answer = still eligible to pass. 2 wrong answers = failed attempt.</div>
+      </div>
+
+      <h3 class="sub-heading">Explosives SOP — Code Colors</h3>
+      <div class="content-block">
+        <div class="badge-grid" style="margin-bottom:14px;">
+          <span class="badge badge-red">🔴 Code Red — Placed</span>
+          <span class="badge badge-amber" style="background:#FFF7EC;border-color:#B8952A;color:#7A5A10;">⚪ Code White — Laced (set to trigger/timer)</span>
+          <span class="badge badge-red" style="background:#EEF0FF;border-color:#3B6CC9;color:#1D3A7A;">🔵 Code Blue — Clear of blast area, awaiting approval</span>
+        </div>
+        <ul class="bullet-list">
+          <li>Notify one level up when Code Blue (TM → TL → SL).</li>
+          <li>Once approved to detonate: <strong>FIRE IN THE HOLE ×3</strong> over local, then detonate.</li>
+        </ul>
+      </div>
+
+      <h3 class="sub-heading">General Knowledge Q&A</h3>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q1</span>
+          Explain the two Command Detonation trigger types used by Ghost Platoon.
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          <strong>M57 firing device</strong> (rarely used) — ~100m range in game.<br>
+          <strong>M152 firing device</strong> (preferred) — ~5km range in game.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q2</span>
+          When do you use a timer instead of command detonation?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          Per briefed requirements. Usually when <strong>jammers are present</strong> or the detonation is deemed too critical to risk accidental trigger-man death.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q3</span>
+          Advantages of a breaching charge on a door or wall?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          Gains <strong>surprise</strong> and <strong>momentary disorientation</strong> of enemies on the other side.<br>
+          On a wall: eliminates the <strong>Fatal Funnel</strong> a doorway creates against a trained enemy.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q4</span>
+          Difference between magnetic triggers and IR triggers for M4 SLAM mine?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          <strong>Magnetic</strong> — bottom attack against armored targets rolling <em>over</em> the mine.<br>
+          <strong>IR</strong> — for wheeled targets rolling <em>past</em> the mine.<br><br>
+          M4 SLAM: <strong>YES</strong> command detonation option.<br>
+          CLAYMORE: <strong>NO</strong> trigger options besides command detonation.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q5</span>
+          Options to detonate the C4 Demo Block?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          1. Command detonation<br>
+          2. Timer<br>
+          3. In tandem with another charge (e.g., M4 SLAM mine)
+        </div>
+      </div>
+
+      <h3 class="sub-heading">The 6 Evolutions</h3>
+      <div class="evolutions-grid">
+        <div class="evo-card">
+          <div class="evo-card-header"><span class="evo-badge">EVO 1</span><span class="evo-name">General Knowledge</span></div>
+          <div class="evo-desc">SOP questions asked at any point during the lane. Know Red/White/Blue codes cold.</div>
+        </div>
+        <div class="evo-card">
+          <div class="evo-card-header"><span class="evo-badge">EVO 2</span><span class="evo-name">APERS Mine Defusal</span></div>
+          <div class="evo-desc">Use mine detector + defusal kit. Locate & defuse 1 APERS mine. Deliver to instructor.</div>
+        </div>
+        <div class="evo-card">
+          <div class="evo-card-header"><span class="evo-badge">EVO 3</span><span class="evo-name">Claymore Mine</span></div>
+          <div class="evo-desc">Emplace 1 Claymore to engage pop-up target from behind cover. Detonate on order. Must hit target.</div>
+        </div>
+        <div class="evo-card">
+          <div class="evo-card-header"><span class="evo-badge">EVO 4</span><span class="evo-name">Breaching Charge</span></div>
+          <div class="evo-desc">Emplace 1 breaching charge on house wall. Detonate on order. (ARMA: wall will not demolish.)</div>
+        </div>
+        <div class="evo-card">
+          <div class="evo-card-header"><span class="evo-badge">EVO 5</span><span class="evo-name">M4 SLAM Mine</span></div>
+          <div class="evo-desc">Emplace in instructor-chosen area, positioned to correctly engage instructor-designated target. Detonate on order.</div>
+        </div>
+        <div class="evo-card">
+          <div class="evo-card-header"><span class="evo-badge">EVO 6</span><span class="evo-name">Demo Block</span></div>
+          <div class="evo-desc">Emplace 1 Demo Block in instructor-chosen location. Detonate on order.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CALL FOR FIRE ═══ -->
+    <section class="section" id="callfire">
+      <div class="section-header">
+        <div class="section-number">LANE 02</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Call For Fire Lane</h2>
+          <p class="section-desc">5-minute time limit from RED SMOKE placement · Must use IMMEDIATE CFF template</p>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <div class="alert-icon">⏱</div>
+        <div class="alert-text"><strong>Timer starts</strong> when cadre places RED SMOKE. You have <strong>5 minutes</strong> to complete the full Call For Fire mission.</div>
+      </div>
+
+      <h3 class="sub-heading">Pre-Transmission Checklist</h3>
+      <div class="content-block">
+        <p style="font-size:14px;margin-bottom:12px;color:var(--text-muted);">Have ALL of the following ready <em>before</em> keying up — transmitting without them = NO GO.</p>
+        <ul class="bullet-list">
+          <li>8-digit grid of target location</li>
+          <li>Positive or negative danger close</li>
+          <li>Ammo type and count (e.g., 4 rounds, HE)</li>
+        </ul>
+      </div>
+
+      <h3 class="sub-heading">Example CFF Sequence</h3>
+      <div class="comms-block">
+        <div class="comms-line"><span class="comms-label-g">GHOST 1 → </span><span class="comms-text">Shade 1, this is Ghost 1, request </span><span class="comms-highlight">IMMEDIATE SUPPRESSION</span><span class="comms-text">, OVER.</span></div>
+        <div class="comms-line"><span class="comms-label-s">SHADE 1 → </span><span class="comms-text">Ghost 1, IMMEDIATE SUPPRESSION received, ready to copy data.</span></div>
+        <div class="comms-line" style="margin-top:8px;"><span class="comms-label-g">GHOST 1 → </span><span class="comms-text">Shade 1, fire mission as follows —</span></div>
+        <div class="comms-line" style="padding-left:20px;"><span class="comms-highlight">Grid 1234 BREAK 5678</span></div>
+        <div class="comms-line" style="padding-left:20px;"><span class="comms-text">Negative danger close,</span></div>
+        <div class="comms-line" style="padding-left:20px;"><span class="comms-text">3 rounds, HE</span></div>
+        <div class="comms-line" style="margin-top:8px;"><span class="comms-label-s">SHADE 1 → </span><span class="comms-text">Fire mission received … </span><span class="comms-highlight">SHOT OVER.</span></div>
+        <div class="comms-line"><span class="comms-label-g">GHOST 1 → </span><span class="comms-highlight">SHOT OUT.</span></div>
+        <div class="comms-line"><span class="comms-label-s">SHADE 1 → </span><span class="comms-highlight">SPLASH OVER.</span></div>
+        <div class="comms-line"><span class="comms-label-g">GHOST 1 → </span><span class="comms-highlight">SPLASH OUT.</span></div>
+        <div class="comms-line" style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;"><span class="comms-label-g">GHOST 1 → </span><span class="comms-text">Shade, this is Ghost 1. BDA good effect on target. </span><span class="comms-highlight">End Mission</span><span class="comms-text"> Time [time].</span></div>
+      </div>
+
+      <h3 class="sub-heading">NO GO Criteria</h3>
+      <table class="nogo-table">
+        <tr><th>Failure</th><th>Result</th></tr>
+        <tr><td>Failing to provide an 8-digit grid</td><td><span class="nogo-badge">NO GO</span></td></tr>
+        <tr><td>Failing to designate + or − danger close</td><td><span class="nogo-badge">NO GO</span></td></tr>
+        <tr><td>Failing to designate round type and count</td><td><span class="nogo-badge">NO GO</span></td></tr>
+        <tr><td>Failing to respond correctly to SHOT OVER / SPLASH OVER</td><td><span class="nogo-badge">NO GO</span></td></tr>
+        <tr><td>Transmitting without all key data ready</td><td><span class="nogo-badge">NO GO</span></td></tr>
+        <tr><td>Not using the IMMEDIATE CFF template</td><td><span class="nogo-badge">NO GO</span></td></tr>
+      </table>
+
+      <div class="content-block" style="margin-top:20px;">
+        <div class="block-title">Call Sequence Reference</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:14px;border-radius:2px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:13px;font-weight:600;color:var(--crimson);">SHOT</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Announces fire</div>
+          </div>
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:14px;border-radius:2px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:13px;font-weight:600;color:var(--crimson);">SUMMIT</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Halfway point</div>
+          </div>
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:14px;border-radius:2px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:13px;font-weight:600;color:var(--crimson);">SPLASH</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Round impact</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ LAND NAV ═══ -->
+    <section class="section" id="landnav">
+      <div class="section-header">
+        <div class="section-number">LANE 03</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Land Navigation</h2>
+          <p class="section-desc">15-minute time limit · 2 attempts · Minimum 3 knowledge questions during course</p>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <div class="alert-icon">💡</div>
+        <div class="alert-text"><strong>Tip:</strong> Identify landmarks, find their bearing/distance, and reverse that info to triangulate your location. Use multiple landmarks, then navigate with a compass.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="content-block">
+          <div class="block-title">Procedure</div>
+          <ol class="step-list">
+            <li>Heal and reset kit at wooden boards before beginning.</li>
+            <li>CADRE starts timer when candidate teleports on instruction.</li>
+            <li>Navigate to marked point, then return — within 15 minutes.</li>
+          </ol>
+        </div>
+        <div class="content-block">
+          <div class="block-title">Knowledge Questions</div>
+          <ul class="bullet-list">
+            <li>Min. 3 questions asked during the course.</li>
+            <li>Answers don't directly fail the course but demonstrate competency.</li>
+            <li>Example: "What does it mean to skyline yourself?" / "What are the 5 major terrain features?"</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Terrain Features</h3>
+
+      <div class="terrain-group">
+        <div class="terrain-group-head">Five Major <span class="terrain-count">5</span></div>
+        <div class="terrain-items">
+          <span class="terrain-item">Hilltop</span>
+          <span class="terrain-item">Valley</span>
+          <span class="terrain-item">Ridge</span>
+          <span class="terrain-item">Saddle</span>
+          <span class="terrain-item">Depression</span>
+        </div>
+      </div>
+
+      <div class="terrain-group">
+        <div class="terrain-group-head">Three Minor <span class="terrain-count">3</span></div>
+        <div class="terrain-items">
+          <span class="terrain-item">Draw</span>
+          <span class="terrain-item">Spur</span>
+          <span class="terrain-item">Cliff</span>
+        </div>
+      </div>
+
+      <div class="terrain-group">
+        <div class="terrain-group-head">Two Supplementary <span class="terrain-count">2</span></div>
+        <div class="terrain-items">
+          <span class="terrain-item">Cut</span>
+          <span class="terrain-item">Fill</span>
+        </div>
+      </div>
+
+      <div class="content-block" style="margin-top:8px;">
+        <div class="block-title">Key Terms</div>
+        <ul class="bullet-list">
+          <li><strong>Skylining</strong> — When an object/person appears against the skyline, silhouetting them and exposing their position.</li>
+          <li><strong>Cresting</strong> — Moving over the top of terrain feature while remaining obscured.</li>
+          <li><strong>6-digit grid</strong> — From map grid lines, read right then up to 6 digits minimum.</li>
+          <li><strong>8-digit grid</strong> — More precise version using estimated tenths within each grid square.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══ GRENADE ═══ -->
+    <section class="section" id="grenade">
+      <div class="section-header">
+        <div class="section-number">LANE 04</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Grenade Range</h2>
+          <p class="section-desc">Two tasks — M320 Grenade Launcher + M67 Frag Grenade</p>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Task 1 — M320 Grenade Launcher</h3>
+
+      <div class="content-block">
+        <div class="block-title">M320 Quick Stats</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:12px;border-radius:2px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">POINT RANGE</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--crimson);">150m</div>
+          </div>
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:12px;border-radius:2px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">AREA RANGE</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--crimson);">350m</div>
+          </div>
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:12px;border-radius:2px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">MAX RANGE</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--crimson);">400m</div>
+          </div>
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:12px;border-radius:2px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">DANGER RADIUS</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--crimson);">165m</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">Ammo types tested: High Explosive · Flare · Smoke</p>
+      </div>
+
+      <div class="content-block">
+        <div class="block-title">Engagement Steps</div>
+        <ol class="step-list">
+          <li>Receive ammo type and target type from grader.</li>
+          <li>Verbally announce round being loaded. <em>("Loading 40mm blue smoke round.")</em></li>
+          <li>Verbally announce range estimation. <em>("[Target type] identified, range 200m.")</em></li>
+          <li>Fire — round must land within <strong>15 meters</strong> of target.</li>
+          <li>Announce round type out: <em>"Smoke out" / "HE out" / "Flare out."</em></li>
+        </ol>
+      </div>
+
+      <h3 class="sub-heading">Task 2 — M67 Frag Grenade</h3>
+      <div class="alert alert-warning">
+        <div class="alert-icon">🎯</div>
+        <div class="alert-text">Target is a troop area <strong>35 meters away</strong>. Grenade must land within <strong>15 meters</strong> of target.</div>
+      </div>
+
+      <div class="content-block">
+        <div class="block-title">Candidate Sequence</div>
+        <ol class="step-list">
+          <li><strong>Stand up</strong> — "Looking down range for target."</li>
+          <li><strong>Return to crouch</strong> — "Prepping grenade."</li>
+          <li><strong>Stand up</strong> — "FRAG OUT."</li>
+          <li><strong>Go prone</strong> immediately after throw.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ═══ SUT ═══ -->
+    <section class="section" id="sut">
+      <div class="section-header">
+        <div class="section-number">LANE 05</div>
+        <div class="section-title-group">
+          <h2 class="section-title">SUT Lane</h2>
+          <p class="section-desc">Small Unit Tactics — knowledge-based 1-on-1 with Lane Cadre</p>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Movement Techniques</h3>
+      <div class="formation-grid">
+        <div class="formation-card">
+          <div class="formation-card-head">Traveling</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label">When</span><span class="fc-value">Contact NOT expected</span></div>
+            <div class="fc-row"><span class="fc-label">Speed</span><span class="fc-value">Fastest</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">Traveling Overwatch</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label">When</span><span class="fc-value">Contact POSSIBLE</span></div>
+            <div class="fc-row"><span class="fc-label">Element</span><span class="fc-value">Moving in formation</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">Bounding Overwatch</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label">When</span><span class="fc-value">Contact EXPECTED</span></div>
+            <div class="fc-row"><span class="fc-label">Method</span><span class="fc-value">Part overwatches while other moves</span></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Movement Formations</h3>
+      <div class="formation-grid">
+        <div class="formation-card">
+          <div class="formation-card-head">Wedge</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label fc-pro">Pro</span><span class="fc-value">Fires all directions</span></div>
+            <div class="fc-row"><span class="fc-label fc-con">Con</span><span class="fc-value">Rough terrain / poor visibility</span></div>
+            <div class="fc-row"><span class="fc-label fc-use">Use</span><span class="fc-value">Open terrain</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">Column (10m)</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label fc-pro">Pro</span><span class="fc-value">Immediate L/R fire</span></div>
+            <div class="fc-row"><span class="fc-label fc-con">Con</span><span class="fc-value">Limited front/rear security</span></div>
+            <div class="fc-row"><span class="fc-label fc-use">Use</span><span class="fc-value">Wooded terrain</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">Staggered Column</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label fc-pro">Pro</span><span class="fc-value">Security</span></div>
+            <div class="fc-row"><span class="fc-label fc-con">Con</span><span class="fc-value">Long to move on line</span></div>
+            <div class="fc-row"><span class="fc-label fc-use">Use</span><span class="fc-value">Roads / urban</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">Line</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label fc-pro">Pro</span><span class="fc-value">Max firepower front</span></div>
+            <div class="fc-row"><span class="fc-label fc-con">Con</span><span class="fc-value">Min L/R fire</span></div>
+            <div class="fc-row"><span class="fc-label fc-use">Use</span><span class="fc-value">React to contact</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">Echelon (L/R)</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label fc-pro">Pro</span><span class="fc-value">High firepower one side</span></div>
+            <div class="fc-row"><span class="fc-label fc-con">Con</span><span class="fc-value">Weak opposite side</span></div>
+            <div class="fc-row"><span class="fc-label fc-use">Use</span><span class="fc-value">Expect fire from specific flank</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">Diamond</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label fc-pro">Pro</span><span class="fc-value">360° / HVT security</span></div>
+            <div class="fc-row"><span class="fc-label fc-con">Con</span><span class="fc-value">Hard to maintain spacing</span></div>
+            <div class="fc-row"><span class="fc-label fc-use">Use</span><span class="fc-value">Protect HVTs</span></div>
+          </div>
+        </div>
+        <div class="formation-card">
+          <div class="formation-card-head">File (3–5m)</div>
+          <div class="formation-card-body">
+            <div class="fc-row"><span class="fc-label fc-pro">Pro</span><span class="fc-value">Immediate L/R fire</span></div>
+            <div class="fc-row"><span class="fc-label fc-con">Con</span><span class="fc-value">Limited front/rear security</span></div>
+            <div class="fc-row"><span class="fc-label fc-use">Use</span><span class="fc-value">Dense wooded terrain</span></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">8 Forms of Contact</h3>
+      <div class="content-block">
+        <ul class="bullet-list">
+          <li><strong>Direct</strong> — Point fire (rifle fire engaging point targets)</li>
+          <li><strong>Indirect</strong> — Munitions through observer (Mortars, Artillery)</li>
+          <li><strong>Non-Hostile Civilian</strong> — Unarmed, non-hostile civilians</li>
+          <li><strong>Obstacles</strong> — Mines, C-Wire, Roadblocks, VBIED</li>
+          <li><strong>CBRN</strong> — Chemical, Biological, Radiological, Nuclear (Arma: mostly chemical)</li>
+          <li><strong>Aerial</strong> — CAS from helicopters, planes, or drones</li>
+          <li><strong>Electronic</strong> — Radio jammers disrupting electronics</li>
+          <li><strong>Visual</strong> — Contact made but unidentifiable / not engageable</li>
+        </ul>
+      </div>
+
+      <h3 class="sub-heading">ACE Report</h3>
+      <div class="two-col">
+        <div class="content-block">
+          <div class="block-title">Components</div>
+          <ul class="bullet-list">
+            <li><strong>A</strong>mmo — Magazine count for all weapon systems</li>
+            <li><strong>C</strong>asualties — Injuries sustained</li>
+            <li><strong>E</strong>quipment — Grenades, AT, demo expended</li>
+          </ul>
+        </div>
+        <div class="content-block">
+          <div class="block-title">Color Codes</div>
+          <div class="status-grid" style="grid-template-columns:repeat(2,1fr);">
+            <div class="status-card s-green"><div class="status-label">GREEN</div><div class="status-range">100–75%</div></div>
+            <div class="status-card s-amber"><div class="status-label">AMBER</div><div class="status-range">74–50%</div></div>
+            <div class="status-card s-red"><div class="status-label">RED</div><div class="status-range">49–25%</div></div>
+            <div class="status-card s-black"><div class="status-label">BLACK</div><div class="status-range">&lt; 25%</div></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Battle Drills</h3>
+
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 1</span> React to Contact</div>
+        <ol class="step-list">
+          <li>Return fire</li>
+          <li>Get on line (cover / concealment)</li>
+          <li>Call 3 D's — Distance, Direction, Description</li>
+        </ol>
+      </div>
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 2A</span> Squad Attack</div>
+        <ol class="step-list">
+          <li>React to contact</li>
+          <li>Rear team flanks at SL direction</li>
+          <li>Support team shifts / lifts fire once set</li>
+          <li>Support team ceases fire on call</li>
+          <li>Assault team pushes kill zone</li>
+          <li>Assault reaches LOA (50–100m)</li>
+          <li>Support advances through kill zone to LOA</li>
+        </ol>
+      </div>
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 3</span> Break Contact</div>
+        <ul class="bullet-list"><li>Bounding</li><li>Peel Left/Right</li><li>Peel Back</li></ul>
+      </div>
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 4</span> React to Near Ambush</div>
+        <ol class="step-list">
+          <li>React to contact</li>
+          <li>Call "Near Ambush"</li>
+          <li>Throw frags</li>
+          <li>Push in teeth</li>
+          <li>Go cyclic</li>
+        </ol>
+      </div>
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 5</span> Knock Out Bunkers</div>
+        <ol class="step-list">
+          <li>React to contact</li>
+          <li>Assault squad flanks</li>
+          <li>TL and RM move up to bunker, grenade in</li>
+          <li>Breach and clear bunker</li>
+          <li>Support pushes to LOA</li>
+        </ol>
+      </div>
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 6</span> Enter Building / Clear Room</div>
+        <ul class="bullet-list">
+          <li>First man enters, second does opposite corner</li>
+          <li>Clear all corners</li>
+          <li>Set overlapping sectors of fire</li>
+        </ul>
+      </div>
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 7</span> Enter / Clear a Trench</div>
+        <ol class="step-list">
+          <li>Support team online — fire/smoke to suppress and obscure entry point</li>
+          <li>Assault team flanks</li>
+          <li>Cease / shift / lift fire</li>
+          <li>Assault to entry point, throw grenade in</li>
+          <li>Two soldiers roll right and left after det</li>
+          <li>Form rolling-T within trench</li>
+        </ol>
+      </div>
+      <div class="bd-card">
+        <div class="bd-title"><span class="bd-num">BD 9</span> React to IDF</div>
+        <ol class="step-list">
+          <li>Call "IDF"</li>
+          <li>Go prone (shrapnel goes up)</li>
+          <li>Once IDF completes, call to break contact in a direction</li>
+          <li>Break contact</li>
+        </ol>
+      </div>
+
+      <h3 class="sub-heading">Squad Ambush — Linear</h3>
+      <div class="content-block">
+        <div class="block-title">Setup</div>
+        <ul class="bullet-list">
+          <li>Early warning position</li>
+          <li>Containment / assault element</li>
+          <li>Initiation / support by fire</li>
+        </ul>
+        <div class="block-title" style="margin-top:16px;">Execution</div>
+        <ol class="step-list">
+          <li>Set security</li>
+          <li>Set SBF</li>
+          <li>SL initiates fire once targets enter kill box</li>
+          <li>Call shift fire</li>
+          <li>Assault force pushes through KB to LOA</li>
+          <li>Double-tap and SSE while moving through KB</li>
+          <li>Retreat to original position and regroup</li>
+        </ol>
+      </div>
+
+      <h3 class="sub-heading">LDA Crossing — Modified Scroll</h3>
+      <div class="content-block">
+        <ol class="step-list">
+          <li>Call "LDA"</li>
+          <li>SL confirms crossing</li>
+          <li>Both ARs move up for near-side security</li>
+          <li>Alpha pushes across, sets far-side security 25m into tree line</li>
+          <li>SL and Bravo move across</li>
+          <li>ARs collapse in</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ═══ VEHICLE ═══ -->
+    <section class="section" id="vehicle">
+      <div class="section-header">
+        <div class="section-number">LANE 06</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Vehicle Lane</h2>
+          <p class="section-desc">Communications (2 min) · Repairs (5 min) · Knowledge Q&A</p>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Task 1 — Communications (2-min time hack)</h3>
+      <div class="content-block">
+        <ol class="step-list">
+          <li>Set radio to <strong>Channel 7</strong> (or cadre-specified channel)</li>
+          <li>Set radio to <strong>Loudspeaker</strong></li>
+          <li>Install radio into <strong>UPPER rack</strong> in designated vehicle</li>
+          <li>Activate radio via <strong>ACE Interact → Radio → USE</strong></li>
+          <li>Radio check cadre to report completion</li>
+          <li>Return to front of vehicle</li>
+        </ol>
+      </div>
+
+      <h3 class="sub-heading">Task 2 — Repairs (5-min time hack)</h3>
+      <div class="content-block">
+        <ol class="step-list">
+          <li>Obtain toolkit from repair specialist box (pre-task)</li>
+          <li>Repair ALL deficiencies (tires, engine, etc.)</li>
+          <li>Vehicle must be operationally ready</li>
+          <li>Report completion to cadre, return to front of vehicle</li>
+        </ol>
+      </div>
+
+      <h3 class="sub-heading">Knowledge Q&A</h3>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q</span>
+          CROW System — Thermal optics and LRF?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          Thermal optics: <strong>N key</strong> to cycle vision modes; some vehicles zoom in via the same key.<br>
+          LRF (Laser Rangefinder): <strong>T key</strong> activates — provides range and zeroes weapon system to that range.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q</span>
+          How do you tow a deficient vehicle?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          Interact to release tow ropes, then attach to the deficient vehicle via ACE interaction.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q</span>
+          SOFT vs HARD dismount?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          <strong>SOFT dismount</strong> — all personnel except the crew (driver + gunner) exit.<br>
+          <strong>HARD dismount</strong> — all personnel within the vehicle exit.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q</span>
+          What is "Cowabunga" and what dismount is used?
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          "Cowabunga" = <strong>React to Near Ambush</strong> on convoy net.<br>
+          Uses a <strong>SOFT dismount</strong> on far side of vehicles because vehicle guns go cyclic on the enemy. Then push in.
+        </div>
+      </div>
+
+      <div class="qa-block" onclick="toggleQA(this)">
+        <div class="qa-question">
+          <span class="qa-q-label">Q</span>
+          Explain the Herringbone formation.
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="qa-a-label">ANSWER</span>
+          Alternating vehicle formation off a high-speed avenue (road). First vehicle moves right at 45°, next moves left at 45°, repeating. Provides security on both flanks.
+        </div>
+      </div>
+
+      <div class="content-block" style="margin-top:8px;">
+        <div class="block-title">Maneuver Basics</div>
+        <ul class="bullet-list">
+          <li><strong>Speed Limiter</strong> — controls max vehicle speed</li>
+          <li><strong>Spacing</strong> — 50–100m between vehicles</li>
+          <li><strong>Coil</strong> — used when coming to a VDO and preparing to dismount</li>
+          <li><strong>CTAB</strong> — used while crewing for situational awareness</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══ WEAPONS ═══ -->
+    <section class="section" id="weapons">
+      <div class="section-header">
+        <div class="section-number">LANE 07</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Weapons Lane</h2>
+          <p class="section-desc">Must pass all 4 weapons in proper sequence</p>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Task 1 — AT4 Anti-Armor Rocket</h3>
+      <div class="content-block">
+        <ol class="step-list">
+          <li>Identify target, verbally announce preparing to fire AT4.</li>
+          <li>Announce range estimation.</li>
+          <li>Check back blast — say <strong>"BACK BLAST CLEAR"</strong>, wait for buddy verification, visually confirm over shoulder.</li>
+          <li>Announce <strong>"ROCKET ROCKET ROCKET"</strong></li>
+          <li>Fire. Rocket must hit the target.</li>
+          <li>Report impact: <em>"Target, mobility kill" / "Target, destroyed" / "Target, still operational."</em></li>
+        </ol>
+      </div>
+
+      <h3 class="sub-heading">Task 2 — 240B Machine Gun</h3>
+      <div class="content-block">
+        <ol class="step-list">
+          <li>Assemble 240B to tripod.</li>
+          <li>Mount onto provided sandbag barrier.</li>
+          <li>Demonstrate rates of fire on cadre command.</li>
+        </ol>
+        <div class="block-title" style="margin-top:14px;">Rates of Fire</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:12px;border-radius:2px;text-align:center;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">SUSTAINED</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:var(--crimson);">6–9 rds</div>
+          </div>
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:12px;border-radius:2px;text-align:center;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">RAPID</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:var(--crimson);">12–15 rds</div>
+          </div>
+          <div style="background:var(--tan-light);border:1px solid var(--border);padding:12px;border-radius:2px;text-align:center;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">CYCLIC</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:var(--crimson);">Continuous</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MEDICAL ═══ -->
+    <section class="section" id="medical">
+      <div class="section-header">
+        <div class="section-number">LANE 08</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Medical Lane</h2>
+          <p class="section-desc">Casualty care · CUF vs TFC · MARCH · ACE Medical system</p>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <div class="alert-icon">⚠</div>
+        <div class="alert-text"><strong>NO GO Criteria:</strong> Unable to differentiate CUF vs TFC. Patient dies. Candidate goes unconscious.</div>
+      </div>
+
+      <h3 class="sub-heading">Equipment Reference</h3>
+      <div class="two-col">
+        <div class="content-block">
+          <div class="block-title">Bandages</div>
+          <ul class="bullet-list">
+            <li><strong>Elastic</strong> — Any wound; highest reopen chance</li>
+            <li><strong>Packing</strong> — Velocity / puncture wounds; slow reopen</li>
+            <li><strong>Basic</strong> — Average treatment option</li>
+            <li><strong>QuikClot</strong> — Basically useless</li>
+          </ul>
+        </div>
+        <div class="content-block">
+          <div class="block-title">Airway / Fluids</div>
+          <ul class="bullet-list">
+            <li><strong>Guedel Tube</strong> — Temporarily secures airway</li>
+            <li><strong>King LT</strong> — Permanently secures airway</li>
+            <li><strong>Blood</strong> — Clotting factors + raises levels</li>
+            <li><strong>Plasma</strong> — Clotting factors + raises levels</li>
+            <li><strong>Saline</strong> — Raises levels only</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">Order of Care</h3>
+      <div class="content-block">
+        <ol class="step-list">
+          <li>Move patient if needed</li>
+          <li>Stop the bleeding</li>
+          <li>Check for pulse</li>
+          <li>CPR if needed</li>
+          <li>Start fluids</li>
+        </ol>
+      </div>
+
+      <h3 class="sub-heading">Care Under Fire (CUF) vs Tactical Field Care (TFC)</h3>
+
+      <div class="two-col">
+        <div class="content-block" style="border-top:3px solid var(--crimson);">
+          <div class="block-title">CUF — Under Effective Fire</div>
+          <div class="alert alert-danger" style="margin-bottom:12px;">
+            <div class="alert-text"><strong>There is no medicine in a firefight.</strong> Win the firefight first.</div>
+          </div>
+          <ul class="bullet-list">
+            <li>Return fire, take cover — fire superiority IS the best medicine</li>
+            <li>Stop life-threatening hemorrhage only (tourniquet on limbs)</li>
+            <li>Establish recovery position if possible</li>
+            <li>All other treatment delayed until TFC</li>
+          </ul>
+        </div>
+        <div class="content-block" style="border-top:3px solid var(--green);">
+          <div class="block-title">TFC — No Longer Under Fire</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Use MARCH acronym. Bulk of TCCC interventions happen here.</p>
+          <ul class="bullet-list">
+            <li>Manage bleed if bandages expired/fallen off</li>
+            <li>Manage airways (King LT / Guedel)</li>
+            <li>Achieve respiration (needle decompression)</li>
+            <li>Monitor circulation (IV access, TXA, fluids)</li>
+            <li>Administer medicines if needed (Epi, Norepinephrine for hypovolemic shock)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-heading">MARCH Acronym</h3>
+      <div class="acronym-grid">
+        <div class="acronym-row">
+          <div class="acronym-letter">M</div>
+          <div class="acronym-content">
+            <div class="acronym-word">Massive Hemorrhage</div>
+            <div class="acronym-desc">Tourniquets, hemostatic dressings, pressure dressings</div>
+          </div>
+        </div>
+        <div class="acronym-row">
+          <div class="acronym-letter">A</div>
+          <div class="acronym-content">
+            <div class="acronym-word">Airways</div>
+            <div class="acronym-desc">King LT (permanent) or Guedel Tube (temporary)</div>
+          </div>
+        </div>
+        <div class="acronym-row">
+          <div class="acronym-letter">R</div>
+          <div class="acronym-content">
+            <div class="acronym-word">Respiration</div>
+            <div class="acronym-desc">Assess for tension pneumothorax; needle decompression</div>
+          </div>
+        </div>
+        <div class="acronym-row">
+          <div class="acronym-letter">C</div>
+          <div class="acronym-content">
+            <div class="acronym-word">Circulation</div>
+            <div class="acronym-desc">IV access, TXA if indicated, blood products (preferred over saline)</div>
+          </div>
+        </div>
+        <div class="acronym-row">
+          <div class="acronym-letter">H</div>
+          <div class="acronym-content">
+            <div class="acronym-word">Hypovolemia (Blood Loss)</div>
+            <div class="acronym-desc">Restore fluid levels; Epinephrine / Norepinephrine for shock</div>
+          </div>
+        </div>
+        <div class="acronym-row" style="opacity:0.7;">
+          <div class="acronym-letter" style="font-size:20px;">e</div>
+          <div class="acronym-content">
+            <div class="acronym-word">Everything Else</div>
+            <div class="acronym-desc">All remaining treatment as situation allows</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SMOKE ═══ -->
+    <section class="section" id="smoke">
+      <div class="section-header">
+        <div class="section-number">REF</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Smoke Designators</h2>
+          <p class="section-desc">Color reference for in-game signaling</p>
+        </div>
+      </div>
+      <div class="smoke-grid">
+        <div class="smoke-card smoke-blue">
+          <div class="smoke-header">🔵 Blue</div>
+          <div class="smoke-body">Signal <strong>friendly forces</strong> on the ground (daytime use).</div>
+        </div>
+        <div class="smoke-card smoke-red">
+          <div class="smoke-header">🔴 Red</div>
+          <div class="smoke-body">Signal <strong>enemy forces</strong> on the ground (daytime). Also: emergency CAS signal.</div>
+        </div>
+        <div class="smoke-card smoke-yellow">
+          <div class="smoke-header">🟡 Yellow</div>
+          <div class="smoke-body">Signal <strong>lift / shift fire</strong>.</div>
+        </div>
+        <div class="smoke-card smoke-purple">
+          <div class="smoke-header">🟣 Purple</div>
+          <div class="smoke-body">Signal <strong>EMERGENCY MASS CASUALTY</strong> situation.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ APPENDIX ═══ -->
+    <section class="section" id="appendix">
+      <div class="section-header">
+        <div class="section-number">APP</div>
+        <div class="section-title-group">
+          <h2 class="section-title">Appendix</h2>
+          <p class="section-desc">SALUTE Report · MARCH quick reference</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h3 class="sub-heading">SALUTE Report</h3>
+          <div class="acronym-grid">
+            <div class="acronym-row">
+              <div class="acronym-letter">S</div>
+              <div class="acronym-content"><div class="acronym-word">Size</div><div class="acronym-desc">Size of enemy unit</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">A</div>
+              <div class="acronym-content"><div class="acronym-word">Activity</div><div class="acronym-desc">What the unit is doing</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">L</div>
+              <div class="acronym-content"><div class="acronym-word">Location</div><div class="acronym-desc">Where they are (grid)</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">U</div>
+              <div class="acronym-content"><div class="acronym-word">Unit / Uniform</div><div class="acronym-desc">Identifying markings</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">T</div>
+              <div class="acronym-content"><div class="acronym-word">Time</div><div class="acronym-desc">Date-time of observation</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">E</div>
+              <div class="acronym-content"><div class="acronym-word">Equipment</div><div class="acronym-desc">Weapons, vehicles, gear</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 class="sub-heading">MARCH (Quick Ref)</h3>
+          <div class="acronym-grid">
+            <div class="acronym-row">
+              <div class="acronym-letter">M</div>
+              <div class="acronym-content"><div class="acronym-word">Massive Hemorrhage</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">A</div>
+              <div class="acronym-content"><div class="acronym-word">Airways</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">R</div>
+              <div class="acronym-content"><div class="acronym-word">Respiration</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">C</div>
+              <div class="acronym-content"><div class="acronym-word">Circulation</div></div>
+            </div>
+            <div class="acronym-row">
+              <div class="acronym-letter">H</div>
+              <div class="acronym-content"><div class="acronym-word">Hypovolemia</div></div>
+            </div>
+            <div class="acronym-row" style="opacity:0.7;">
+              <div class="acronym-letter" style="font-size:20px;">e</div>
+              <div class="acronym-content"><div class="acronym-word">Everything Else</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  function showSection(id, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+    return false;
+  }
+
+  function toggleQA(block) {
+    block.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
