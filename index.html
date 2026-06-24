@@ -109,6 +109,32 @@ body{background:var(--bg);color:var(--light);font-family:-apple-system,BlinkMacS
 .trend-label{font-size:10px;color:var(--muted);white-space:nowrap;}
 .stat-divider{height:.5px;background:var(--border);margin:12px 0;}
 
+.breakdown-sub{font-size:10px;font-weight:600;color:var(--tan);text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;}
+.period-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px 20px;}
+.period-block{min-width:0;}
+.period-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;padding-bottom:5px;border-bottom:.5px solid var(--border);}
+.period-name{font-size:12px;font-weight:600;color:var(--light);white-space:nowrap;}
+.period-total{font-size:10px;color:var(--muted);white-space:nowrap;}
+.mini-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.mini-label{font-size:11px;color:var(--light);min-width:84px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mini-track{flex:1;height:5px;background:var(--card);border-radius:3px;overflow:hidden;}
+.mini-fill{height:100%;border-radius:3px;transition:width .4s ease;}
+.mini-val{font-size:10px;color:var(--muted);min-width:42px;text-align:right;white-space:nowrap;}
+
+.card-sub{font-size:11px;color:var(--muted);margin:-8px 0 14px;}
+.ref-row{display:flex;align-items:center;gap:10px;padding:6px;border-radius:6px;cursor:pointer;transition:background .15s;}
+.ref-row:hover{background:var(--card);}
+.ref-drill{display:none;}
+.ref-drill.open{display:block;padding:2px 6px 10px;}
+.drill-inner{background:var(--card);border:.5px solid var(--border);border-radius:6px;padding:12px 14px;}
+.legend{display:flex;gap:16px;margin:-6px 0 4px;}
+.legend span{font-size:11px;}
+.grouped-bars{display:flex;align-items:flex-end;gap:16px;min-height:150px;margin-top:12px;overflow-x:auto;padding-bottom:4px;}
+.grp-col{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;}
+.grp-bars{display:flex;align-items:flex-end;gap:3px;}
+.grp-bar{width:13px;border-radius:3px 3px 0 0;position:relative;display:flex;justify-content:center;min-height:2px;}
+.grp-count{position:absolute;top:-14px;font-size:9px;color:var(--tan);font-weight:600;white-space:nowrap;}
+
 .empty{text-align:center;padding:48px 24px;color:var(--muted);}
 .empty-icon{font-size:36px;margin-bottom:12px;}
 .empty-text{font-size:13px;}
@@ -161,13 +187,21 @@ const CONFIG = {
   <!-- Analytics always shows all years combined -->
   <div id="panel-analytics" class="panel">
     <div class="analytics-grid">
-      <div class="chart-card">
+      <div class="chart-card full">
         <div class="chart-title">How applicants found us</div>
+        <div class="card-sub">Top 10 — click a source for its by-year &amp; by-month breakdown</div>
         <div id="chart-referral"></div>
       </div>
-      <div class="chart-card">
-        <div class="chart-title">Application outcomes</div>
-        <div id="chart-outcomes"></div>
+
+      <div class="chart-card full">
+        <div class="chart-title">Application outcomes per month (all years)</div>
+        <div class="legend">
+          <span style="color:var(--green);">● Approved</span>
+          <span style="color:var(--tan);">● Pending</span>
+          <span style="color:#f07080;">● Declined</span>
+        </div>
+        <div class="grouped-bars" id="chart-outcomes-grouped"></div>
+
         <div class="stat-divider"></div>
         <div class="chart-title" style="margin-bottom:8px;">Yes/No gate failures</div>
         <div id="chart-gates"></div>
@@ -549,16 +583,9 @@ function renderAnalytics() {
     const ref = get(a.row, C.REFERRAL) || 'Unknown';
     refCounts[ref] = (refCounts[ref] || 0) + 1;
   });
-  renderBarChart('chart-referral',
-    Object.entries(refCounts).sort((a,b) => b[1]-a[1]).slice(0,8).map(([label,count]) => ({label,count})),
-    () => 'var(--red)'
-  );
+  renderReferral();
 
-  renderBarChart('chart-outcomes', [
-    { label:'Approved', count: allApps.filter(a => a.status==='approved').length, color:'var(--green)' },
-    { label:'Pending',  count: allApps.filter(a => a.status==='pending').length,  color:'var(--tan)'   },
-    { label:'Declined', count: allApps.filter(a => a.status==='declined').length, color:'var(--red)'   },
-  ], d => d.color);
+  renderOutcomesGrouped();
 
   const gateLabels = {
     [C.AGE18]:     'Under 18',
@@ -770,6 +797,137 @@ function renderMilitary() {
       <span class="bar-pct">${pct}%</span>
     </div>`;
   }).join('');
+}
+
+// -- Referral (top 10, click to drill) & outcome breakdowns --
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]
+  ));
+}
+
+let refTop = [];
+
+function renderReferral() {
+  const el = document.getElementById('chart-referral');
+  if (!el) return;
+  const counts = {};
+  allApps.forEach(a => {
+    const r = get(a.row, C.REFERRAL) || 'Unknown';
+    counts[r] = (counts[r] || 0) + 1;
+  });
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  if (sorted.length === 0) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--muted);">No data yet.</div>';
+    return;
+  }
+  const top = sorted.slice(0, 10);
+  refTop = top.map(([label]) => label);
+  const max = Math.max(...top.map(([, c]) => c), 1);
+  el.innerHTML = top.map(([label, count], i) => `
+    <div class="ref-row" onclick="toggleReferral(${i})">
+      <span class="bar-label" title="${esc(label)}">${esc(label)}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(count / max * 100)}%;background:var(--red);"></div></div>
+      <span class="bar-pct">${count}</span>
+      <span class="app-chevron" id="ref-chev-${i}">▾</span>
+    </div>
+    <div class="ref-drill" id="ref-drill-${i}"></div>
+  `).join('');
+}
+
+function referralDrill(source) {
+  const years = CONFIG.SHEET_NAMES || [];
+  const yearCounts = years.map(yr => ({
+    label: yr,
+    count: (allAppsByTab[yr] || []).filter(a => (get(a.row, C.REFERRAL) || 'Unknown') === source).length,
+  }));
+  const yMax = Math.max(...yearCounts.map(y => y.count), 1);
+  const yearHtml = yearCounts.map(y => `
+    <div class="mini-row">
+      <span class="mini-label">${esc(y.label)}</span>
+      <div class="mini-track"><div class="mini-fill" style="width:${Math.round(y.count / yMax * 100)}%;background:var(--tan);"></div></div>
+      <span class="mini-val">${y.count}</span>
+    </div>`).join('');
+
+  const months = {};
+  allApps.forEach(a => {
+    if ((get(a.row, C.REFERRAL) || 'Unknown') !== source) return;
+    const key = monthKey(a.submittedAt);
+    if (!key) return;
+    if (!months[key]) {
+      const d = parseSheetDate(a.submittedAt);
+      months[key] = { key, label: d.toLocaleDateString('en-US', { month:'short', year:'2-digit' }), count: 0 };
+    }
+    months[key].count++;
+  });
+  const mEntries = Object.values(months).sort((a, b) => a.key.localeCompare(b.key));
+  const mMax = Math.max(...mEntries.map(m => m.count), 1);
+  const monthHtml = mEntries.length
+    ? `<div class="trend-bars">${mEntries.map(m => {
+        const h = Math.max(Math.round(m.count / mMax * 70), m.count > 0 ? 8 : 3);
+        return `<div class="trend-col">
+          <span class="trend-count">${m.count}</span>
+          <div class="trend-bar" style="height:${h}px;background:rgba(191,32,72,0.5);" title="${m.count}"></div>
+          <span class="trend-label">${m.label}</span>
+        </div>`;
+      }).join('')}</div>`
+    : '<div style="font-size:11px;color:var(--muted);">No dated applications.</div>';
+
+  return `<div class="drill-inner">
+    <div class="breakdown-sub">By year</div>${yearHtml}
+    <div class="breakdown-sub" style="margin-top:12px;">By month</div>${monthHtml}
+  </div>`;
+}
+
+function toggleReferral(i) {
+  const drill = document.getElementById('ref-drill-' + i);
+  const chev = document.getElementById('ref-chev-' + i);
+  if (!drill) return;
+  const isOpen = drill.classList.contains('open');
+  document.querySelectorAll('.ref-drill.open').forEach(d => { d.classList.remove('open'); d.innerHTML = ''; });
+  document.querySelectorAll('.app-chevron.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) {
+    drill.innerHTML = referralDrill(refTop[i]);
+    drill.classList.add('open');
+    if (chev) chev.classList.add('open');
+  }
+}
+
+function renderOutcomesGrouped() {
+  const el = document.getElementById('chart-outcomes-grouped');
+  if (!el) return;
+  const months = {};
+  allApps.forEach(a => {
+    const key = monthKey(a.submittedAt);
+    if (!key) return;
+    if (!months[key]) {
+      const d = parseSheetDate(a.submittedAt);
+      months[key] = { key, label: d.toLocaleDateString('en-US', { month:'short', year:'2-digit' }), approved:0, pending:0, declined:0 };
+    }
+    if (a.status === 'approved') months[key].approved++;
+    else if (a.status === 'declined') months[key].declined++;
+    else if (a.status === 'pending') months[key].pending++;
+  });
+  const entries = Object.values(months).sort((a, b) => a.key.localeCompare(b.key));
+  if (entries.length === 0) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--muted);">No dated applications found.</div>';
+    return;
+  }
+  const max = Math.max(...entries.flatMap(m => [m.approved, m.pending, m.declined]), 1);
+  const H = 100;
+  const bar = (v, color) => {
+    const h = Math.max(Math.round(v / max * H), v > 0 ? 6 : 2);
+    return `<div class="grp-bar" style="height:${h}px;background:${color};" title="${v}"><span class="grp-count">${v > 0 ? v : ''}</span></div>`;
+  };
+  el.innerHTML = entries.map(m => `
+    <div class="grp-col">
+      <div class="grp-bars" style="height:${H + 14}px;">
+        ${bar(m.approved, 'var(--green)')}
+        ${bar(m.pending, 'var(--tan)')}
+        ${bar(m.declined, 'var(--red)')}
+      </div>
+      <span class="trend-label">${m.label}</span>
+    </div>`).join('');
 }
 
 function renderBarChart(id, data, colorFn) {
